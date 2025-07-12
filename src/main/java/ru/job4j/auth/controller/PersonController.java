@@ -1,5 +1,6 @@
 package ru.job4j.auth.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -7,20 +8,20 @@ import ru.job4j.auth.domain.Person;
 import ru.job4j.auth.repository.PersonRepository;
 
 import java.util.List;
+import java.util.Spliterator;
 import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping("/person")
+@AllArgsConstructor
 public class PersonController {
   private final PersonRepository persons;
 
-  public PersonController(final PersonRepository persons) {
-    this.persons = persons;
-  }
-
   @GetMapping("/")
   public List<Person> findAll() {
-    return StreamSupport.stream(this.persons.findAll().spliterator(), false).toList();
+    Spliterator<Person> result = persons.findAll()
+        .spliterator();
+    return StreamSupport.stream(result, false).toList();
   }
 
   @GetMapping("/{id}")

@@ -24,10 +24,6 @@ public class AuthController {
 
   @PostMapping("/register")
   public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
-    if (personService.findByLogin(request.username()).isPresent()) {
-      return ResponseEntity.badRequest().body("Error: Login is already taken!");
-    }
-
     personService.save(request);
 
     return ResponseEntity.ok("User registered successfully!");

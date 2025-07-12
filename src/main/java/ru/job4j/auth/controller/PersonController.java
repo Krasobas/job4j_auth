@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.job4j.auth.dto.PatchRequest;
 import ru.job4j.auth.dto.PersonResponse;
 import ru.job4j.auth.dto.RegistrationRequest;
 import ru.job4j.auth.dto.UpdateRequest;
@@ -42,6 +43,12 @@ public class PersonController {
   @ResponseStatus(HttpStatus.OK)
   public void update(@RequestBody @Valid UpdateRequest request) {
     service.update(request);
+  }
+
+  @PatchMapping("/")
+  @ResponseStatus(HttpStatus.OK)
+  public void patch(@RequestBody @Valid PatchRequest request) {
+    service.patch(request);
   }
 
   @DeleteMapping("/{id}")

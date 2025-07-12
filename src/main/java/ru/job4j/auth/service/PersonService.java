@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.job4j.auth.domain.Person;
+import ru.job4j.auth.dto.PatchRequest;
 import ru.job4j.auth.dto.PersonResponse;
 import ru.job4j.auth.dto.RegistrationRequest;
 import ru.job4j.auth.dto.UpdateRequest;
@@ -38,6 +39,19 @@ public class PersonService {
         .orElseThrow(() -> new NoSuchElementException("Profile not found."));
     person.setLogin(request.username());
     person.setPassword(passwordEncoder.encode(request.password()));
+    person = repository.save(person);
+    return new PersonResponse(person.getId(), person.getLogin());
+  }
+
+  public PersonResponse patch(PatchRequest request) {
+    Person person = repository.findById(request.id())
+        .orElseThrow(() -> new NoSuchElementException("Profile not found."));
+    if (Objects.nonNull(request.username())) {
+      person.setLogin(request.username());
+    }
+    if (Objects.nonNull(request.password())) {
+      person.setPassword(passwordEncoder.encode(request.password()));
+    }
     person = repository.save(person);
     return new PersonResponse(person.getId(), person.getLogin());
   }

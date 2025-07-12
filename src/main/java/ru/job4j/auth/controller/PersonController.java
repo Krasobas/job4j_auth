@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.auth.dto.PersonResponse;
 import ru.job4j.auth.dto.RegistrationRequest;
@@ -20,39 +19,36 @@ public class PersonController {
   private final PersonService service;
 
   @GetMapping("/")
+  @ResponseStatus(HttpStatus.OK)
   public List<PersonResponse> findAll() {
     return service.findAll();
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<PersonResponse> findById(
+  @ResponseStatus(HttpStatus.OK)
+  public PersonResponse findById(
       @PathVariable @Min(value = 0, message = "Id has to be a positive integer") int id
   ) {
-    return new ResponseEntity<PersonResponse>(
-        service.findById(id),
-        HttpStatus.OK
-    );
+    return service.findById(id);
   }
 
   @PostMapping("/")
-  public ResponseEntity<PersonResponse> create(@RequestBody @Valid RegistrationRequest request) {
-    return new ResponseEntity<PersonResponse>(
-        service.save(request),
-        HttpStatus.CREATED
-    );
+  @ResponseStatus(HttpStatus.CREATED)
+  public PersonResponse create(@RequestBody @Valid RegistrationRequest request) {
+    return service.save(request);
   }
 
   @PutMapping("/")
-  public ResponseEntity<Void> update(@RequestBody @Valid UpdateRequest request) {
+  @ResponseStatus(HttpStatus.OK)
+  public void update(@RequestBody @Valid UpdateRequest request) {
     service.update(request);
-    return ResponseEntity.ok().build();
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<Void> delete(
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(
       @PathVariable @Min(value = 0, message = "Id has to be a positive integer") int id
   ) {
     service.delete(id);
-    return ResponseEntity.ok().build();
   }
 }
